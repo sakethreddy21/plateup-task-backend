@@ -4,13 +4,11 @@ import { createGoogleCalendarEvent } from '../services/calenderEvent';
 
 export const bookingSession = async (req: Request, res: Response) => {
     const { speakerId, date, time } = req.body;
-    const userId = req.body.user.userId;
+    const userId = req.body.user?.userId;
 
     try {
-        // Normalize time format (e.g., '9:00' to '09:00')
+        // Normalize and validate the time format
         const formattedTime = time.padStart(5, '0');
-
-        // Validate and parse the time value
         const [hour, minute] = formattedTime.split(':').map(Number);
 
         if (isNaN(hour) || isNaN(minute)) {
@@ -21,14 +19,18 @@ export const bookingSession = async (req: Request, res: Response) => {
             return res.status(400).json({ error: 'Time slot must be between 9 AM and 4 PM.' });
         }
 
-        // Check if the time slot is already booked
-        const slot = await pool.query(
-            'SELECT * FROM sessions WHERE speaker_id = $1 AND date = $2 AND time = $3',
-            [speakerId, date, formattedTime]
+        // Calculate the start and end times for the requested booking
+        const startTime = new Date(`${date}T${formattedTime}:00+05:30`);
+        const endTime = new Date(startTime.getTime() + 60 * 60 * 1000); // 1 hour later
+
+        // Check for overlapping sessions within the next hour
+        const overlappingSlots = await pool.query(
+            'SELECT * FROM sessions WHERE speaker_id = $1 AND date = $2 AND (time BETWEEN $3 AND $4 OR time BETWEEN $5 AND $6)',
+            [speakerId, date, formattedTime, `${(hour + 1).toString().padStart(2, '0')}:${minute}`, formattedTime, `${(hour + 1).toString().padStart(2, '0')}:${minute}`]
         );
 
-        if (slot.rows.length > 0) {
-            return res.status(400).json({ error: 'This time slot is already booked.' });
+        if (overlappingSlots.rows.length > 0) {
+            return res.status(400).json({ error: 'This time slot overlaps with an existing session.' });
         }
 
         // Book the session
@@ -36,13 +38,9 @@ export const bookingSession = async (req: Request, res: Response) => {
             'INSERT INTO sessions (user_id, speaker_id, date, time) VALUES ($1, $2, $3, $4)',
             [userId, speakerId, date, formattedTime]
         );
-        
-        console.log('bookingSession route hit'); // Debug log
-        
+
         const speaker = await pool.query('SELECT * FROM combined_users WHERE id = $1', [speakerId]);
         const user = await pool.query('SELECT * FROM combined_users WHERE id = $1', [userId]);
-        const startTime = new Date(`${date}T${formattedTime}:00`);
-        const endTime = new Date(startTime.getTime() + 60 * 60 * 1000); // Add 1 hour
 
         const event = await createGoogleCalendarEvent(
             'Session Booking',

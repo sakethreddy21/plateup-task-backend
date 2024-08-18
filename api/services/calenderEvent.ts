@@ -45,11 +45,11 @@ export const createGoogleCalendarEvent = async (summary: string, location: strin
         location,
         description,
         start: {
-            dateTime: startTime.toISOString(),
-            timeZone: 'Asia/Kolkata',
+            dateTime: startTime.toISOString(), // This should be correct if the Date object is in the right time zone
+            timeZone: 'Asia/Kolkata', // Ensures that Google Calendar interprets the time in IST
         },
         end: {
-            dateTime: endTime.toISOString(),
+            dateTime: endTime.toISOString(), // Same here
             timeZone: 'Asia/Kolkata',
         },
         attendees: attendees.map(email => ({ email })),
