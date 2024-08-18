@@ -6,11 +6,6 @@ dotenv.config();
 
 export const googlerouter = Router();
 
-const date = '2024-09-01'; // Format: YYYY-MM-DD
-const time = '10:00'; // Format: HH:MM
-
-const startTime = new Date(`${date}T${time}:00`);
-const endTime = new Date(startTime.getTime() + 60 * 60 * 1000); // Add 1 hour
 
 const oauth2Client = new google.auth.OAuth2(
     process.env.CLIENT_ID,

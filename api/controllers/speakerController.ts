@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 
-const pool = require('../config/db');
+import pool from '../config/db';
 
 
 // Setup Speaker Profile Controller
