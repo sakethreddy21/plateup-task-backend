@@ -1,0 +1,218 @@
+{
+	"info": {
+		"_postman_id": "07a2fc39-8515-4d84-b4a5-a51cde73cce5",
+		"name": "plate-up",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28978790",
+		"_collection_link": "https://www.postman.com/maintenance-observer-11961715/workspace/plateup-backend-task/collection/28978790-07a2fc39-8515-4d84-b4a5-a51cde73cce5?action=share&source=collection_link&creator=28978790"
+	},
+	"item": [
+		{
+			"name": "SignUP-Speaker-User",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"firstName\": \"John\",\r\n    \"lastName\": \"Doe\",\r\n    \"email\": \"ksaketh@gmail.com\",\r\n    \"password\": \"Kkkkkk2kk\",\r\n    \"userType\": \"speaker\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://plateup-task-backend.vercel.app/api/auth/signup",
+					"protocol": "https",
+					"host": [
+						"plateup-task-backend",
+						"vercel",
+						"app"
+					],
+					"path": [
+						"api",
+						"auth",
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "request_OTP-User_Speaker",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://plateup-task-backend.vercel.app/api/auth/otp?email=ksakethreddy@gmail.com",
+					"protocol": "https",
+					"host": [
+						"plateup-task-backend",
+						"vercel",
+						"app"
+					],
+					"path": [
+						"api",
+						"auth",
+						"otp"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "ksakethreddy@gmail.com"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "verify_OTP-User-Speaker",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\":\"ksakethreddy@gmail.com\",\r\n  \"otp\":\"296223\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://plateup-task-backend.vercel.app/api/auth/verify-otp",
+					"protocol": "https",
+					"host": [
+						"plateup-task-backend",
+						"vercel",
+						"app"
+					],
+					"path": [
+						"api",
+						"auth",
+						"verify-otp"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login-Speaker-User",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\":\"ksakethreddyreddy@gmail.com\",\r\n  \"password\":\"Kkkkkk2kk\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://plateup-task-backend.vercel.app/api/auth/login",
+					"protocol": "https",
+					"host": [
+						"plateup-task-backend",
+						"vercel",
+						"app"
+					],
+					"path": [
+						"api",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "setup_profile-Speaker",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"expertise\": \"JavaScript Development\",\r\n    \"pricePerSession\": 100\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://plateup-task-backend.vercel.app/api/speaker/setup-profile",
+					"protocol": "https",
+					"host": [
+						"plateup-task-backend",
+						"vercel",
+						"app"
+					],
+					"path": [
+						"api",
+						"speaker",
+						"setup-profile"
+					]
+				},
+				"description": "Can kindly provide the token thta is generated from loging in"
+			},
+			"response": []
+		},
+		{
+			"name": "Book_session-User",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "\r\n{\r\n    \"speakerId\": \"26\",\r\n    \"date\": \"2024-04-08\",\r\n    \"time\": \"13:00\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://plateup-task-backend.vercel.app/api/user/book-session",
+					"protocol": "https",
+					"host": [
+						"plateup-task-backend",
+						"vercel",
+						"app"
+					],
+					"path": [
+						"api",
+						"user",
+						"book-session"
+					]
+				},
+				"description": "# Before hitting this api please browse this following api in any web browsers : [https://plateup-task-backend.vercel.app/google](https://plateup-task-backend.vercel.app/google) \\[In case of error please refresh the screen\\]\n\n# And please Provide token in authorization"
+			},
+			"response": []
+		},
+		{
+			"name": "list_all_speakers-Public",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://plateup-task-backend.vercel.app/api/public/speakers",
+					"protocol": "https",
+					"host": [
+						"plateup-task-backend",
+						"vercel",
+						"app"
+					],
+					"path": [
+						"api",
+						"public",
+						"speakers"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

@@ -1,0 +1,135 @@
+{
+    "clientName": "Thunder Client",
+    "collectionName": "plateup",
+    "collectionId": "177b2643-c96d-42bc-952f-917ba9e27d27",
+    "dateExported": "2024-08-18T17:54:33.757Z",
+    "version": "1.2",
+    "folders": [],
+    "requests": [
+        {
+            "_id": "fe522642-7d40-4511-bfc1-fb9f893a9c1f",
+            "colId": "177b2643-c96d-42bc-952f-917ba9e27d27",
+            "containerId": "",
+            "name": "sigup speaker and user",
+            "url": "https://plateup-task-backend.vercel.app/api/auth/signup",
+            "method": "POST",
+            "sortNum": 10000,
+            "created": "2024-08-18T16:17:33.422Z",
+            "modified": "2024-08-18T17:03:43.300Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"email\": \"ksakethreddy@gmail.com\",\n    \"password\": \"Kkkkkk2kk\",\n    \"userType\": \"speaker\"\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "82924e6e-3326-4c1c-9f55-85f2a9e8afac",
+            "colId": "177b2643-c96d-42bc-952f-917ba9e27d27",
+            "containerId": "",
+            "name": "request_OTP",
+            "url": "https://plateup-task-backend.vercel.app/api/auth/otp?email=ksakethreddy@gmail.com",
+            "method": "GET",
+            "sortNum": 20000,
+            "created": "2024-08-18T16:20:33.544Z",
+            "modified": "2024-08-18T17:03:49.747Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "email",
+                    "value": "ksakethreddy@gmail.com",
+                    "isPath": false
+                }
+            ]
+        },
+        {
+            "_id": "842bb930-8282-48fc-8204-195d54a00515",
+            "colId": "177b2643-c96d-42bc-952f-917ba9e27d27",
+            "containerId": "",
+            "name": "verify_OTP",
+            "url": "https://plateup-task-backend.vercel.app/api/auth/verify-otp",
+            "method": "POST",
+            "sortNum": 30000,
+            "created": "2024-08-18T16:21:42.496Z",
+            "modified": "2024-08-18T17:04:03.096Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"email\":\"ksakethreddy@gmail.com\",\n  \"otp\":\"296223\"\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "b908c89f-f434-4847-b681-a4bc2b1ebbce",
+            "colId": "177b2643-c96d-42bc-952f-917ba9e27d27",
+            "containerId": "",
+            "name": "Login",
+            "url": "https://plateup-task-backend.vercel.app/api/auth/login",
+            "method": "POST",
+            "sortNum": 40000,
+            "created": "2024-08-18T16:22:57.372Z",
+            "modified": "2024-08-18T17:06:01.969Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"email\":\"ksakethreddyreddy@gmail.com\",\n  \"password\":\"Kkkkkk2kk\"\n}",
+                "form": []
+            }
+        },
+        {
+            "_id": "ded6bf68-7901-4d1d-b00b-c0f88c5238c6",
+            "colId": "177b2643-c96d-42bc-952f-917ba9e27d27",
+            "containerId": "",
+            "name": "speaker-profile-setup",
+            "url": "https://plateup-task-backend.vercel.app/api/speaker/setup-profile",
+            "method": "POST",
+            "sortNum": 50000,
+            "created": "2024-08-18T16:24:46.746Z",
+            "modified": "2024-08-18T17:04:20.999Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \"expertise\": \"JavaScript Development\",\n    \"pricePerSession\": 100\n}\n",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjI2LCJ1c2VyVHlwZSI6InNwZWFrZXIiLCJpYXQiOjE3MjQwMDA2NDksImV4cCI6MTcyNDAwNDI0OX0.gv8EG2YLKe9woKiOfRZ5qsNxkE0HWOn39An9v_7xTYE"
+            }
+        },
+        {
+            "_id": "f433763d-414b-4723-af43-3ef7a5fe0494",
+            "colId": "177b2643-c96d-42bc-952f-917ba9e27d27",
+            "containerId": "",
+            "name": "book-session",
+            "url": "http://localhost:3000/api/user/book-session",
+            "method": "POST",
+            "sortNum": 60000,
+            "created": "2024-08-18T16:48:44.996Z",
+            "modified": "2024-08-18T17:40:01.158Z",
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n    \"speakerId\": \"26\",\n    \"date\": \"2024-04-08\",\n    \"time\": \"13:00\"\n}\n",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjI1LCJ1c2VyVHlwZSI6InVzZXIiLCJpYXQiOjE3MjQwMDA3NjEsImV4cCI6MTcyNDAwNDM2MX0.FVSFPe4U3pHvagMVfbz8qHAQs1tj35Va6JL9wcLeqvg"
+            }
+        },
+        {
+            "_id": "2c0bd889-9f5a-4426-904a-4aab7d3440a1",
+            "colId": "177b2643-c96d-42bc-952f-917ba9e27d27",
+            "containerId": "",
+            "name": "list-all-Speakers",
+            "url": "https://plateup-task-backend.vercel.app/api/public/speakers",
+            "method": "GET",
+            "sortNum": 70000,
+            "created": "2024-08-18T17:41:22.496Z",
+            "modified": "2024-08-18T17:44:40.958Z",
+            "headers": []
+        }
+    ],
+    "ref": "RhgiPLsGT9-QRkBnbq22EVhV46l0d7-VWJwvjkAovjbu232hgdkbz93qoVncYXiYG_9JqBt4e4OeOMlx3Sz4tg"
+}
