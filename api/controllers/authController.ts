@@ -1,166 +1,137 @@
-
-
-import { request, response } from 'express'
-import bcrypt from 'bcryptjs'
-import { formatISO } from 'date-fns'
-import pool from '../config/db'
+import { Request, Response } from 'express';
+import bcrypt from 'bcryptjs';
+import { formatISO } from 'date-fns';
+import pool from '../config/db';
 const generateOtp = require('../utils/generateOtp');
 const jwt = require('jsonwebtoken');
 
-
-
-// Signup controller
 const requests = {
-    signup: async (req: typeof request, res: typeof response) => {
+    signup: async (req: Request, res: Response) => {
         const { firstName, lastName, email, password, userType } = req.body;
 
         try {
-            const userExists = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+            const userExists = await pool.query('SELECT * FROM combined_users WHERE email = $1', [email]);
             if (userExists.rows.length) {
-                res.status(400).json({ error: 'Email already in use.' });
-                return;
+                return res.status(400).json({ error: 'Email already in use.' });
             }
 
             const hashedPassword = await bcrypt.hash(password, 10);
 
             const newUser = await pool.query(
-                'INSERT INTO users (first_name, last_name, email, password, user_type, is_verified) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+                'INSERT INTO combined_users (first_name, last_name, email, password, user_type, is_verified) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
                 [firstName, lastName, email, hashedPassword, userType, false]
             );
 
             const otp = generateOtp();
 
-            // Calculate the expiry time as a date-time string
-            const expiresAt = formatISO(new Date(Date.now() + 10 * 60 * 1000)); // 10 minutes from now in ISO format
+            const expiresAt = formatISO(new Date(Date.now() + 10 * 60 * 1000));
 
             await pool.query(
                 'INSERT INTO otps (user_id, otp, expires_at) VALUES ($1, $2, $3)',
                 [newUser.rows[0].id, otp, expiresAt]
             );
 
-            res.status(201).json({ message: 'User registered successfully. Please verify your OTP.' });
+            return res.status(201).json({ message: `${userType} registered successfully. Please verify your OTP.`});
         } catch (err: any) {
             console.error(err.message);
-            res.status(500).json({ error: 'Server error.' });
+            return res.status(500).json({ error: 'Server error.' });
         }
     },
 
-    // OTP verification controller
-    // OTP verification controller
-    verifyOtp: async (req: typeof request, res: typeof response) => {
+    verifyOtp: async (req: Request, res: Response) => {
         console.log('verifyOtp route hit'); // Debug log
 
         const { email, otp } = req.body;
 
         try {
-            const user = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+            const user = await pool.query('SELECT * FROM combined_users WHERE email = $1', [email]);
             if (!user.rows.length) {
-                res.status(400).json({ error: 'User not found.' });
-                return;
+                return res.status(400).json({ error: 'User not found.' });
             }
 
             const storedOtp = await pool.query('SELECT * FROM otps WHERE user_id = $1 AND otp = $2', [user.rows[0].id, otp]);
             if (!storedOtp.rows.length) {
-                res.status(400).json({ error: 'Invalid OTP.' });
-                return;
+                return res.status(400).json({ error: 'Invalid OTP.' });
             }
 
             const currentTime = new Date().toISOString();
 
             if (storedOtp.rows[0].expires_at < currentTime) {
-                res.status(400).json({ error: 'OTP has expired.' });
-                return;
+                return res.status(400).json({ error: 'OTP has expired.' });
             }
 
-            await pool.query('UPDATE users SET is_verified = $1 WHERE id = $2', [true, user.rows[0].id]);
+            await pool.query('UPDATE combined_users SET is_verified = $1 WHERE id = $2', [true, user.rows[0].id]);
 
             await pool.query('DELETE FROM otps WHERE user_id = $1', [user.rows[0].id]);
 
-            res.status(200).json({ message: 'OTP verified successfully. Your account is now verified.' });
+            return res.status(200).json({ message: 'OTP verified successfully. Your account is now verified.' });
         } catch (err: any) {
             console.error(err.message);
-            res.status(500).json({ error: 'Server error.' });
+            return res.status(500).json({ error: 'Server error.' });
         }
     },
 
-
-    // Login controller
-    login: async (req: typeof request, res: typeof response) => {
+    login: async (req: Request, res: Response) => {
         const { email, password } = req.body;
 
         try {
-            const user = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+            const user = await pool.query('SELECT * FROM combined_users WHERE email = $1', [email]);
             if (!user.rows.length) {
-                res.status(400).json({ error: 'Invalid credentials.' });
-                return;
+                return res.status(400).json({ error: 'Invalid credentials.' });
             }
 
             const isMatch = await bcrypt.compare(password, user.rows[0].password);
             if (!isMatch) {
-                res.status(400).json({ error: 'Invalid credentials.' });
-                return;
+                return res.status(400).json({ error: 'Invalid credentials.' });
             }
 
             if (!user.rows[0].is_verified) {
-                res.status(400).json({ error: 'Account not verified.' });
-                return;
+                return res.status(400).json({ error: 'Account not verified.' });
             }
 
             const token = jwt.sign(
                 { userId: user.rows[0].id, userType: user.rows[0].user_type },
-                process.env.JWT_SECRET,
+                process.env.JWT_SECRET as string,
                 { expiresIn: '1h' }
             );
 
-            res.status(200).json({ token });
+            return res.status(200).json({ token });
         } catch (err: any) {
             console.error(err.message);
-            res.status(500).json({ error: 'Server error.' });
+            return res.status(500).json({ error: 'Server error.' });
         }
     },
 
-
-    getOtp: async (req: typeof request, res: typeof response) => {
+    getOtp: async (req: Request, res: Response) => {
         const { email } = req.query;
 
         try {
-            const user = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+            const user = await pool.query('SELECT * FROM combined_users WHERE email = $1', [email]);
             if (!user.rows.length) {
-                res.status(400).json({ error: 'User not found.' });
-                return;
+                return res.status(400).json({ error: 'User not found.' });
             }
 
             const otpRecord = await pool.query('SELECT * FROM otps WHERE user_id = $1 ORDER BY created_at DESC LIMIT 1', [user.rows[0].id]);
             if (!otpRecord.rows.length) {
-                res.status(404).json({ error: 'OTP not found.' });
-                return;
+                return res.status(404).json({ error: 'OTP not found.' });
             }
 
-            res.status(200).json({ otp: otpRecord.rows[0].otp });
+            return res.status(200).json({ otp: otpRecord.rows[0].otp });
         } catch (err: any) {
             console.error(err.message);
-            res.status(500).json({ error: 'Server error.' });
+            return res.status(500).json({ error: 'Server error.' });
         }
     },
 
-
-    //create a request for getting data of all users
-    getData: async (req: typeof request, res: typeof response) => {
+    getData: async (req: Request, res: Response) => {
         try {
-            const data = await pool.query('SELECT * FROM users');
-            res.status(200).json(data.rows);
-            return data.rows;
+            const data = await pool.query('SELECT * FROM combined_users');
+            return res.status(200).json(data.rows);
         } catch (err: any) {
             console.error(err.message);
-            res.status(500).json({ error: 'Server error.' });
-            return [];
+            return res.status(500).json({ error: 'Server error.' });
         }
     }
-
-}
-
-
+};
 
 module.exports = requests;
-
-
