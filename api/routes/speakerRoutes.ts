@@ -1,7 +1,6 @@
-
-const { authMiddleware, roleMiddleware } = require('../middlewares/authMiddleware')
-const { Router } = require('express');
-const { setupSpeakerProfile } = require('../controllers/speakerController');
+import { Router } from 'express';
+import { setupSpeakerProfile } from '../controllers/speakerController';
+import { authMiddleware, roleMiddleware } from '../middlewares/authMiddleware';
 const router = Router();
 
 // Setup Speaker Profile Route (Protected Route)

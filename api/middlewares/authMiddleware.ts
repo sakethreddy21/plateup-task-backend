@@ -1,7 +1,7 @@
 const jwt= require('jsonwebtoken');
 import { request, response , NextFunction} from 'express'
 
- const authMiddleware = (req: typeof request, res: typeof response, next: NextFunction) => {
+export const authMiddleware = (req: typeof request, res: typeof response, next: NextFunction) => {
     const token = req.header('Authorization')?.replace('Bearer ', '');
 
     if (!token) {
@@ -18,7 +18,7 @@ import { request, response , NextFunction} from 'express'
     }
 };
 
- const roleMiddleware = (roles: Array<any>) => (req: typeof request, res: typeof response, next: NextFunction)=> {
+export const roleMiddleware = (roles: Array<any>) => (req: typeof request, res: typeof response, next: NextFunction)=> {
     const user = req.body.user;
 
     if (!roles.includes(user.userType)) {
@@ -30,4 +30,3 @@ import { request, response , NextFunction} from 'express'
 };
 
 
-module.exports = { authMiddleware, roleMiddleware };

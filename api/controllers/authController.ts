@@ -11,7 +11,7 @@ import dotenv from 'dotenv';
 dotenv.config();      
 
 // Signup controller
-const requests = {
+ const requests = {
     signup: async (req: Request, res: Response) => {
         const { firstName, lastName, email, password, userType } = req.body;
 
@@ -160,8 +160,8 @@ const requests = {
 
 }
 
+export default requests;
 
 
-module.exports = requests;
 
 

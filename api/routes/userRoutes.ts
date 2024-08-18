@@ -1,10 +1,9 @@
 
-const Router = require('express');
-const { bookingSession } = require('../controllers/userController');
-const { authMiddleware, roleMiddleware } = require('../middlewares/authMiddleware')
-const google = require('googleapis').google;
-const router = Router();
-
+import express from 'express';
+import { bookingSession } from '../controllers/usercontroller';
+import { authMiddleware, roleMiddleware } from '../middlewares/authMiddleware';
+import { google } from 'googleapis';
+const router = express.Router();
 
 const SCOPES = ['https://www.googleapis.com/auth/calendar'];
 const oauth2Client = new google.auth.OAuth2(
