@@ -1,7 +1,8 @@
-import { Router } from 'express';
-import { bookingSession } from '../controllers/usercontroller';
+
+const Router = require('express');
+const { bookingSession } = require('../controllers/userController');
 const { authMiddleware, roleMiddleware } = require('../middlewares/authMiddleware')
-import { google } from 'googleapis';
+const google = require('googleapis').google;
 const router = Router();
 
 

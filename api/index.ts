@@ -1,8 +1,9 @@
-import { google } from "googleapis";
-import publicRoutes from "./routes/publicRoutes";
-import speakerRoutes from "./routes/speakerRoutes";
-import userRoutes from "./routes/userRoutes";
-import  {googlerouter} from "./services/calenderEvent";
+
+const google = require('googleapis').google;
+const publicRoutes  = require('./routes/publicRoutes');
+const speakerRoutes  = require('./routes/speakerRoutes');
+const userRoutes = require('./routes/userRoutes');
+const {googlerouter} = require("./services/calenderEvent");
 const express = require("express");
 const app = express();
 const dotenv = require('dotenv');

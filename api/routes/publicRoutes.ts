@@ -1,7 +1,6 @@
-import { Router } from 'express';
-import { listSpeakers } from '../controllers/speakerController';
-
-const      router = Router();
+const {Router} = require('express');
+const {listSpeakers} = require('../controllers/speakerController');
+const router = Router();
 
 // Public Route to List All Speakers
 router.get('/speakers', listSpeakers);

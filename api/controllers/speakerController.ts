@@ -1,8 +1,6 @@
 import { Request, Response } from 'express';
-import pool from '../config/db';
-import { sendEmailNotification } from '../services/mailer';
 
-
+const pool = require('../config/db');
 
 
 // Setup Speaker Profile Controller

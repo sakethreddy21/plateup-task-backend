@@ -1,7 +1,11 @@
+
+
 import { Request, Response } from 'express';
-import bcrypt from 'bcryptjs';
-import { formatISO } from 'date-fns';
-import pool from '../config/db';
+
+const bcrypt = require('bcrypt');
+
+const { formatISO } = require('date-fns');
+const pool = require('../config/db');
 const generateOtp = require('../utils/generateOtp');
 const jwt = require('jsonwebtoken');
 

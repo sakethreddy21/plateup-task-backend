@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
-import pool from '../config/db';
+
+const pool = require('../config/db');
  // Import fetch if you are using it for making HTTP requests
-import { createGoogleCalendarEvent } from '../services/calenderEvent';
+const { createGoogleCalendarEvent } = require('../services/calenderEvent')
 
 export const bookingSession = async (req: Request, res: Response) => {
     const { speakerId, date, time } = req.body;
