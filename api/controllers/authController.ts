@@ -13,15 +13,80 @@ const validateEmail = (email: string) => {
     return emailRegex.test(email);
 };
 
+const validateUserType = (userType: string) => {
+    return ['user', 'speaker'].includes(userType.toLowerCase());
+};
+
 const validatePassword = (password: string) => {
+    // Example password requirements: minimum 8 characters, at least one uppercase, one lowercase, and one number
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
     return passwordRegex.test(password);
+};
+
+const validateName = (name: string) => {
+    // Example name validation: only letters, and length between 2 to 50 characters
+    const nameRegex = /^[a-zA-Z]{2,50}$/;
+    return nameRegex.test(name);
 };
 
 // Controllers
 const requests = {
     signup: async (req: Request, res: Response) => {
-        // (Implementation as described previously)
+        const { firstName, lastName, email, password, userType } = req.body;
+
+        try {
+            // Validate email format
+            if (!validateEmail(email)) {
+                res.status(400).json({ error: 'Invalid email format.' });
+                return;
+            }
+
+            // Validate userType
+            if (!validateUserType(userType)) {
+                res.status(400).json({ error: 'Invalid user type. Must be "user" or "speaker".' });
+                return;
+            }
+
+            // Validate password
+            if (!validatePassword(password)) {
+                res.status(400).json({ error: 'Password must be at least 8 characters long, include one uppercase letter, one lowercase letter, and one number.' });
+                return;
+            }
+
+            // Validate first and last names
+            if (!validateName(firstName) || !validateName(lastName)) {
+                res.status(400).json({ error: 'Names must only contain letters and be between 2 to 50 characters long.' });
+                return;
+            }
+
+            const userExists = await pool.query('SELECT * FROM combined_users WHERE email = $1', [email]);
+            if (userExists.rows.length) {
+                res.status(400).json({ error: 'Email already in use.' });
+                return;
+            }
+
+            const hashedPassword = await bcrypt.hash(password, 10);
+
+            const newUser = await pool.query(
+                'INSERT INTO combined_users (first_name, last_name, email, password, user_type, is_verified) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+                [firstName, lastName, email, hashedPassword, userType, false]
+            );
+
+            const otp = generateOtp();
+
+            // Calculate the expiry time as a date-time string
+            const expiresAt = formatISO(new Date(Date.now() + 10 * 60 * 1000)); // 10 minutes from now in ISO format
+
+            await pool.query(
+                'INSERT INTO otps (user_id, otp, expires_at) VALUES ($1, $2, $3)',
+                [newUser.rows[0].id, otp, expiresAt]
+            );
+
+            res.status(201).json({ message: 'User registered successfully. Please verify your OTP.' });
+        } catch (err: any) {
+            console.error(err.message);
+            res.status(500).json({ error: 'Server error.' });
+        }
     },
 
     // OTP verification controller with basic checks
