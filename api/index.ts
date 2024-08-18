@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const dotenv = require('dotenv');
 dotenv.config();
-const authRoutes = require('./routes/authRoutes.js');
+const authRoutes = require('./routes/authRoutes.ts');
 const {authMiddleware,roleMiddleware}  = require('./middlewares/authMiddleware');
 
 app.use(express.json());

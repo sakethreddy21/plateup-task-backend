@@ -16,7 +16,7 @@ const requests = {
         const { firstName, lastName, email, password, userType } = req.body;
 
         try {
-            const userExists = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+            const userExists = await pool.query('SELECT * FROM combined_users WHERE email = $1', [email]);
             if (userExists.rows.length) {
                 res.status(400).json({ error: 'Email already in use.' });
                 return;
@@ -25,7 +25,7 @@ const requests = {
             const hashedPassword = await bcrypt.hash(password, 10);
 
             const newUser = await pool.query(
-                'INSERT INTO users (first_name, last_name, email, password, user_type, is_verified) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+                'INSERT INTO combined_users (first_name, last_name, email, password, user_type, is_verified) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
                 [firstName, lastName, email, hashedPassword, userType, false]
             );
 
@@ -54,7 +54,7 @@ const requests = {
         const { email, otp } = req.body;
 
         try {
-            const user = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+            const user = await pool.query('SELECT * FROM combined_users WHERE email = $1', [email]);
             if (!user.rows.length) {
                 res.status(400).json({ error: 'User not found.' });
                 return;
@@ -73,7 +73,7 @@ const requests = {
                 return;
             }
 
-            await pool.query('UPDATE users SET is_verified = $1 WHERE id = $2', [true, user.rows[0].id]);
+            await pool.query('UPDATE combined_users SET is_verified = $1 WHERE id = $2', [true, user.rows[0].id]);
 
             await pool.query('DELETE FROM otps WHERE user_id = $1', [user.rows[0].id]);
 
@@ -90,7 +90,7 @@ const requests = {
         const { email, password } = req.body;
 
         try {
-            const user = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+            const user = await pool.query('SELECT * FROM combined_users WHERE email = $1', [email]);
             if (!user.rows.length) {
                 res.status(400).json({ error: 'Invalid credentials.' });
                 return;
@@ -125,7 +125,7 @@ const requests = {
         const { email } = req.query;
 
         try {
-            const user = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+            const user = await pool.query('SELECT * FROM combined_users WHERE email = $1', [email]);
             if (!user.rows.length) {
                 res.status(400).json({ error: 'User not found.' });
                 return;
@@ -148,7 +148,7 @@ const requests = {
     //create a request for getting data of all users
     getData: async (req: Request, res: Response) => {
         try {
-            const data = await pool.query('SELECT * FROM users');
+            const data = await pool.query('SELECT * FROM combined_users');
             res.status(200).json(data.rows);
             return data.rows;
         } catch (err: any) {
