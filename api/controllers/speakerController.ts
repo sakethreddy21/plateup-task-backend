@@ -29,13 +29,11 @@ export const setupSpeakerProfile = async (req: Request, res: Response) => {
 };
 
 
-// List Speakers Controller
 export const listSpeakers = async (req: Request, res: Response) => {
     try {
-                // Get all speakers with their user details
+        // Get all speakers with their user details and user_id as speaker_id
         const speakers = await pool.query(`
-        
-            SELECT u.first_name, u.last_name, s.expertise, s.price_per_session
+            SELECT u.id AS speaker_id, u.first_name, u.last_name, s.expertise, s.price_per_session
             FROM speakers s
             JOIN combined_users u ON s.user_id = u.id
         `);
@@ -46,5 +44,3 @@ export const listSpeakers = async (req: Request, res: Response) => {
         res.status(500).json({ error: 'Server error.' });
     }
 };
-
-
