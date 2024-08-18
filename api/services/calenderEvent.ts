@@ -1,7 +1,7 @@
-const { google } = require('googleapis');
-const dotenv = require('dotenv');
+import { Router } from 'express';
+import { google } from 'googleapis';
+import dotenv from 'dotenv';
 
-const { Router } = require('express');
 dotenv.config();
 
 export const googlerouter = Router();
