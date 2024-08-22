@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const dotenv = require('dotenv');
-import cors from 'cors';
+const cors = require('cors');
 dotenv.config();
 import authRoutes from './routes/authRoutes';
 import speakerRoutes from './routes/speakerRoutes';
