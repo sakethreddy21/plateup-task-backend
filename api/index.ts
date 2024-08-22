@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const dotenv = require('dotenv');
+import cors from 'cors';
 dotenv.config();
 import authRoutes from './routes/authRoutes';
 import speakerRoutes from './routes/speakerRoutes';
@@ -10,7 +11,7 @@ import { googlerouter } from './services/calenderEvent';
 import publicRoutes from './routes/publicRoutes';
 app.use(express.json());
 // Routes
-
+app.use(cors());
 // Auth Routes
 app.use('/api/auth', authRoutes);
 //public route
