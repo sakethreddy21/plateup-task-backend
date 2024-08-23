@@ -21,6 +21,12 @@ export const setupSpeakerProfile = async (req: Request, res: Response) => {
             [userId, expertise, pricePerSession]
         );
 
+        // Update isProfileComplete field in combined_users table
+        await pool.query(
+            'UPDATE combined_users SET isProfileComplete = TRUE WHERE id = $1',
+            [userId]
+        );
+
         res.status(201).json({ message: 'Speaker profile created successfully.', profile: newProfile.rows[0] });
     } catch (err: any) {
         console.error(err.message);
