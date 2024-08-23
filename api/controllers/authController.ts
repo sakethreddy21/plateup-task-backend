@@ -66,10 +66,10 @@ const requests = {
             }
 
             const hashedPassword = await bcrypt.hash(password, 10);
-
+            const isProfileComplete = userType === 'user';
             const newUser = await pool.query(
-                'INSERT INTO combined_users (first_name, last_name, email, password, user_type, is_verified) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-                [firstName, lastName, email, hashedPassword, userType, false]
+                'INSERT INTO combined_users (first_name, last_name, email, password, user_type, is_verified, is_profile_complete) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
+                [firstName, lastName, email, hashedPassword, userType, false, isProfileComplete]
             );
 
             const otp = generateOtp();
