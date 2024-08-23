@@ -170,7 +170,7 @@ const requests = {
             }
 
             const token = jwt.sign(
-                { userId: user.rows[0].id, userType: user.rows[0].user_type , isVerified: user.rows[0].is_verified },
+                { userId: user.rows[0].id, userType: user.rows[0].user_type , isprofilecomplete: user.rows[0].isprofilecomplete },
                 process.env.JWT_SECRET || 'defaultSecret',
                 { expiresIn: '1h' }
             );
